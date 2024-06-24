@@ -1,6 +1,7 @@
 from quixstreams import Application
 from time import sleep
 from kraken_api import KrakenWebSocketAPI
+from loguru import logger
 
 
 def produce_trades(
@@ -28,6 +29,7 @@ def produce_trades(
         while True:
 
             trades = kraken_api.get_trades()
+            logger.info("Got trades!")
 
             for trade in trades:
 
@@ -39,7 +41,7 @@ def produce_trades(
                     key=message.key
                 )
 
-                print(f"Sent data: {trade}")
+                logger.info(f"Sent data: {trade}")
 
                 sleep(1)
 
@@ -47,7 +49,7 @@ def produce_trades(
 if __name__ == '__main__':
 
     produce_trades(
-        kafka_broker_address='localhost:19092',
+        kafka_broker_address='redpanda-0:9092',
         kafka_topic_name='trade'
     )
 
